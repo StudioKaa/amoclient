@@ -27,5 +27,18 @@ After a succesfull login, Amoclient will redirect you to `/amoclient/ready`. You
 ## Logging out
 Send your user to `/amoclient/logout`.
 
+## A login page
+You should have a named route that will serve your users with a button, link or image that will point to `/amoclient/redirect.`
+
+An example;
+```
+Route::get('/amoclient/ready', function(){
+	return redirect('/educations');
+})
+Route::get('/login', function(){
+	return view('login.login');
+})->name('login');
+```
+
 ## Laravel's Auth scaffolding
 You shouldn't use this, amoclient will handle everything for your.
