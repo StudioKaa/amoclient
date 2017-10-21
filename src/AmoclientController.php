@@ -5,6 +5,7 @@ namespace StudioKaa\Amoclient;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -54,23 +55,34 @@ class AmoclientController extends Controller
 
 			//Get 'user' claim
 			$id_token->getClaims();
-			$user = $id_token->getClaim('user');
-			$user = json_decode($user);
+			$token_user = $id_token->getClaim('user');
+			$token_user = json_decode($token_user);
 
 			//Check if user may login
-			if(env('AMO_APP_FOR', 'teachers') == 'teachers' && $user->type != 'teacher')
+			if(env('AMO_APP_FOR', 'teachers') == 'teachers' && $token_user->type != 'teacher')
 			{
 				dd('Oops: this app is only availble to teacher-accounts');
 			}
 
-			var_dump(User::find($user->id));
-			dd($user);
+			//Create new user if not exists
+			$user = User::find($token_user->id);
+			if(!$user)
+			{
+				$user = new User();
+				$user->id = $token_user->id;
+				$user->name = $token_user->name;
+				$user->email = $token_user->email;
+				$user->type = $token_user->type;
+				$user->save();
+			}
+
+			//Login and redirect
+			Auth::login($user);
+			return redirect('/amoclient/ready');
 
 		} catch (\GuzzleHttp\Exception\BadResponseException $e) {
 		    dd("Unable to retrieve access token: " . $e->getResponse()->getBody());
 		}
-
-		//return $request;
 	}
 
 	public function getAndCheckEnv()

@@ -14,4 +14,9 @@ You also need to set these keys in your .env file:
 	* May be one of: all, teachers 
 	* This key determines if students might login to your application. You can still deny them from action using guards, but this will prevent student-users from being created at all.
 
+Now alter your User model by adding the line: `public $incrementing = false;`
+
 Lastly, you should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model.
+
+###After login
+After a succesfull login, Amoclient will redirect you to '/amoclient/ready'. You may define a route in your applications `routes/web.php` file to handle this.
