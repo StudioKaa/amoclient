@@ -16,6 +16,7 @@ class AmoclientController extends Controller
 
 	public function callback(Request $request)
 	{
+		//todo
 		return $request;
 	}
 
