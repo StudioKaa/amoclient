@@ -1,0 +1,26 @@
+{
+    "name": "studiokaa/amoclient",
+    "description": "Client for amologin",
+    "type": "library",
+    "license": "none",
+    "authors": [
+        {
+            "name": "Bart Roos",
+            "email": "bart@studiokaa.co"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "StudioKaa\\amoclient\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "StudioKaa\\amoclient\\AmoclientServiceProvider"
+            ]
+        }
+    }
+}
