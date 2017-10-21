@@ -1,6 +1,6 @@
 <?php
 
-namespace StudioKaa\amoclient;
+namespace StudioKaa\Amoclient;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;

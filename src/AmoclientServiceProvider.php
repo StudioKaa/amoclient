@@ -1,5 +1,5 @@
 <?php
-namespace StudioKaa\amoclient;
+namespace StudioKaa\Amoclient;
 use Illuminate\Support\ServiceProvider;
 
 class AmoclientServiceProvider extends ServiceProvider

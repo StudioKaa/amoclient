@@ -13,13 +13,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "StudioKaa\\amoclient\\": "src"
+            "StudioKaa\\Amoclient\\": "src"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "StudioKaa\\amoclient\\AmoclientServiceProvider"
+                "StudioKaa\\Amoclient\\AmoclientServiceProvider"
             ]
         }
     }
