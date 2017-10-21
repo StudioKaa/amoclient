@@ -85,7 +85,13 @@ class AmoclientController extends Controller
 		}
 	}
 
-	public function getAndCheckEnv()
+	public function logout()
+	{
+		Auth::logout();
+		return redirect('/amoclient/ready');
+	}
+
+	private function getAndCheckEnv()
 	{
 		$client['id'] = env('AMO_CLIENT_ID');
 		$client['secret'] = env('AMO_CLIENT_SECRET');

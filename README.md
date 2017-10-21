@@ -22,4 +22,10 @@ Lastly, you should remove any default users-migration from your app, because Amo
 Redirect your users to `http://yoursite/amoclient/redirect`, this will send your user to _amologin_ for authentication.
 
 ## Catch the after-login redirect
-After a succesfull login, Amoclient will redirect you to '/amoclient/ready'. You may define a route in your applications `routes/web.php` file to handle this.
+After a succesfull login, Amoclient will redirect you to `/amoclient/ready`. You may define a route in your applications `routes/web.php` file to handle this.
+
+## Logging out
+Send your user to `/amoclient/logout`.
+
+## Laravel's Auth scaffolding
+You shouldn't use this, amoclient will handle everything for your.
