@@ -16,7 +16,7 @@ You also need to set these keys in your .env file:
 
 Now alter your User model by adding the line: `public $incrementing = false;`
 
-Lastly, you should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model.
+Lastly, you should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
 
 ## Logging in
 Redirect your users to `http://yoursite/amoclient/redirect`, this will send your user to _amologin_ for authentication.
@@ -40,5 +40,5 @@ Route::get('/login', function(){
 })->name('login');
 ```
 
-## Laravel's Auth scaffolding
+## Laravel's `make:auth`
 You shouldn't use this, amoclient will handle everything for your.
