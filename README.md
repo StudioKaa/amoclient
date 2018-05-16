@@ -9,8 +9,10 @@ Now set these keys in your .env file:
 * AMO_CLIENT_ID
 * AMO_CLIENT_SECRET
 * AMO_APP_FOR
-	* May be one of: all, teachers 
-	* This key determines if students might login to your application. You can still deny them from action using guards, but this will prevent student-users from being created at all.
+	* This key determines if students can login to your application. 
+	* May be one of:
+		* _all_: everyone can login, you may restrict access using guards or middleware.
+		* _teachers_: a student will be completely blocked and no user will be created when they try to login.
 
 Alter your User model by adding the line: `public $incrementing = false;`
 
@@ -62,17 +64,15 @@ use \StudioKaa\Amoclient\Facades\AmoAPI;
 
 class MyController extends Controller
 {
-
 	public function index()
 	{
 		 $users = AmoAPI::get('users');
 		 return view('users.index')->with(compact('users'));
 	}
-
 }
 
 ```
 
 ### `AmoAPI::get($endpoint)`
-This will call `https://login.amo.rocks/api/$endpoint`.
-The method returns a Laravel-collection.
+* Performs an HTTP-request like `GET https://login.amo.rocks/api/$endpoint`.
+* Returns a Laravel-collection.
