@@ -57,7 +57,7 @@ _Please note:_ a real logout cannot be accomplished at this time. If you log-out
 Don't use this in combination with Amoclient.
 
 ## AmoAPI
-Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented.
+Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented, but you may refer to _amologin_'s [routes/api.php](https://github.com/StudioKaa/amologin/blob/master/routes/api.php)-file.
 
 An example of calling the api through Amoclient;
 ```
@@ -79,4 +79,4 @@ class MyController extends Controller
 ### `AmoAPI::get($endpoint)`
 * Performs an HTTP-request like `GET https://login.amo.rocks/api/$endpoint`.
 * This method relies on a user being authenticated through the amoclient first. Please do call this method only from routes and/or controllers protected by the _auth_ middlware.
-* Returns a Laravel-collection.
+* Returns a Laravel-collection
