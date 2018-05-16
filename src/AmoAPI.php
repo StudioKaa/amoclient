@@ -25,6 +25,11 @@ class AmoAPI
 	private function call($endpoint = 'user', $method = 'GET')
 	{
 		$access_token = session('access_token');
+		if($access_token == null)
+		{
+			abort(401, 'No access token: probably not logged-in');
+		}
+
 		$endpoint = str_start($endpoint, '/');
 
 		$this->log('START using access_token');
