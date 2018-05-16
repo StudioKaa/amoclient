@@ -2,6 +2,8 @@
 
 namespace StudioKaa\Amoclient;
 use Lcobucci\JWT\Parser;
+use Auth;
+use Illuminate\Support\Facades\Log;
 
 class AmoAPI
 {
@@ -23,8 +25,11 @@ class AmoAPI
 		$access_token = session('access_token');
 		$endpoint = str_start($endpoint, '/');
 
+		$this->log('using access_token');
+
 		if($access_token->isExpired())
 		{
+			$this->log('access_token expired, trying to refresh');
 			$access_token = $this->refresh(session('refresh_token'));
 		}
 
@@ -51,6 +56,8 @@ class AmoAPI
 			    ],
 			]);
 
+			$this->log('new access_token acquired');
+
 			$tokens = json_decode( (string) $response->getBody() );
 			$access_token = (new Parser())->parse((string) $tokens->access_token);
 			session('access_token', $access_token);
@@ -58,8 +65,14 @@ class AmoAPI
 		}
 		catch(\GuzzleHttp\Exception\ClientException $e)
 		{
+			$this->log('refreshing token failed, redirecting for authorization');
 			$url = app('StudioKaa\Amoclient\AmoclientController')->redirect()->getTargetUrl();
 			abort(302, '', ["Location" => $url]);
 		}
+	}
+
+	private function log($msg)
+	{
+		Log::debug("AMOCLIENT (" . Auth::user()->id . "): $msg");
 	}
 }
