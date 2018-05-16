@@ -81,6 +81,6 @@ class MyController extends Controller
 ```
 
 ### `AmoAPI::get($endpoint)`
-* Performs an HTTP-request like `GET https://login.amo.rocks/api/$endpoint`.
+* Performs an HTTP-request like `GET https://api.amo.rocks/$endpoint`.
 * This method relies on a user being authenticated through the amoclient first. Please do call this method only from routes and/or controllers protected by the _auth_ middlware.
 * Returns a Laravel-collection
