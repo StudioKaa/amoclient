@@ -2,21 +2,23 @@
 
 A Laravel 5 package for use with the _amologin_ OpenID connect server.
 
-## Getting started
-In your laravel project run:
-* `composer require studiokaa/amoclient`
-* `php artisan migrate`
+## Installation
+In your laravel project run: `composer require studiokaa/amoclient`
 
-You also need to set these keys in your .env file:
+Now set these keys in your .env file:
 * AMO_CLIENT_ID
 * AMO_CLIENT_SECRET
 * AMO_APP_FOR
 	* May be one of: all, teachers 
 	* This key determines if students might login to your application. You can still deny them from action using guards, but this will prevent student-users from being created at all.
 
-Now alter your User model by adding the line: `public $incrementing = false;`
+Alter your User model by adding the line: `public $incrementing = false;`
 
-Lastly, you should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+You should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+
+Lastly, run `php artisan migrate`.
+
+## Usage
 
 ### Logging in
 Redirect your users to `http://yoursite/amoclient/redirect`, this will send your user to _amologin_ for authentication.
@@ -46,7 +48,7 @@ Send your user to `/amoclient/logout`.
 _Please note:_ a real logout cannot be accomplished at this time. If you log-out of your app, but are still logged-in to the _amologin_-server, this will have no effect.
 
 
-## Laravel's `make:auth`
+### Laravel's `make:auth`
 Don't use this in combination with Amoclient.
 
 ## AmoAPI
