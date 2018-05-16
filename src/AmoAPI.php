@@ -44,7 +44,7 @@ class AmoAPI
 			$this->log('Succesfully using current access_token');
 		}
 
-	    $response = $this->client->request($method, 'https://login.amo.rocks/api' . $endpoint, [
+	    $response = $this->client->request($method, 'https://api.amo.rocks/' . $endpoint, [
 		    'headers' => [
 		        'Accept' => 'application/json',
 		        'Authorization' => 'Bearer '. $access_token
