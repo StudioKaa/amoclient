@@ -3,6 +3,9 @@
 A Laravel 5 package for use with the _amologin_ OpenID connect server.
 
 ## Installation
+
+__!!__ Please make sure your app is using _https_, to prevent unwanted exposure of token, secrets, etc.
+
 In your laravel project run: `composer require studiokaa/amoclient`
 
 Now set these keys in your .env file:
@@ -58,12 +61,12 @@ Apart from being the central login-server, _login.amo.rocks_ also exposes an api
 
 An example of calling the api through Amoclient;
 ```
-
 namespace App\Http\Controllers;
 use \StudioKaa\Amoclient\Facades\AmoAPI;
 
 class MyController extends Controller
 {
+	//This method is protected by the auth-middleware
 	public function index()
 	{
 		 $users = AmoAPI::get('users');
@@ -75,4 +78,5 @@ class MyController extends Controller
 
 ### `AmoAPI::get($endpoint)`
 * Performs an HTTP-request like `GET https://login.amo.rocks/api/$endpoint`.
+* This method relies on a user being authenticated through the amoclient first. Please do call this method only from routes and/or controllers protected by the _auth_ middlware.
 * Returns a Laravel-collection.
