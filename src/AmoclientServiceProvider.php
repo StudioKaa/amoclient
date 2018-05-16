@@ -30,5 +30,8 @@ class AmoclientServiceProvider extends ServiceProvider
         );
 
         $this->app->make('StudioKaa\Amoclient\AmoclientController');
-    }
+        $this->app->singleton('StudioKaa\AmoAPI', function () {
+            return new AmoAPI();
+        });
+    }   
 }
