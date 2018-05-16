@@ -61,6 +61,8 @@ class AmoAPI
 			$tokens = json_decode( (string) $response->getBody() );
 			$access_token = (new Parser())->parse((string) $tokens->access_token);
 			session('access_token', $access_token);
+			session('refresh_token', $tokens->refresh_token);
+			
 			return $access_token;
 		}
 		catch(\GuzzleHttp\Exception\ClientException $e)
