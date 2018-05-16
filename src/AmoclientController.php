@@ -74,8 +74,15 @@ class AmoclientController extends Controller
 				$user->save();
 			}
 
-			//Login and redirect
+			//Login
 			Auth::login($user);
+
+			//Store access- and refresh-token in session
+			$access_token = (new Parser())->parse((string) $tokens->access_token);
+			$request->session()->put('access_token', $access_token);
+			$request->session()->put('refresh_token', $tokens->refresh_token);
+
+			//Redirect
 			return redirect('/amoclient/ready');
 
 		} catch (\GuzzleHttp\Exception\BadResponseException $e) {
