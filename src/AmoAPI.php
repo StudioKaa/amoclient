@@ -13,7 +13,12 @@ class AmoAPI
 		$this->client = new \GuzzleHttp\Client;
 	}
 
-	public function call($endpoint = '/api/user')
+	public function get($endpoint)
+	{
+		return $this->call($endpoint, 'GET');
+	}
+
+	private function call($endpoint = 'user', $method = 'GET')
 	{
 		$access_token = session('access_token');
 		$endpoint = str_start($endpoint, '/');
@@ -23,7 +28,7 @@ class AmoAPI
 			$access_token = $this->refresh(session('refresh_token'));
 		}
 
-	    $response = $this->client->request('GET', 'https://login.amo.rocks' . $endpoint, [
+	    $response = $this->client->request($method, 'https://login.amo.rocks/api' . $endpoint, [
 		    'headers' => [
 		        'Accept' => 'application/json',
 		        'Authorization' => 'Bearer '. $access_token
