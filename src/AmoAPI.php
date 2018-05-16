@@ -27,12 +27,16 @@ class AmoAPI
 		$access_token = session('access_token');
 		$endpoint = str_start($endpoint, '/');
 
-		$this->log('using access_token');
+		$this->log('START using access_token');
 
 		if($access_token->isExpired())
 		{
 			$this->log('access_token expired, trying to refresh');
 			$access_token = $this->refresh(session('refresh_token'));
+		}
+		else
+		{
+			$this->log('Succesfully using current access_token');
 		}
 
 	    $response = $this->client->request($method, 'https://login.amo.rocks/api' . $endpoint, [
@@ -41,6 +45,8 @@ class AmoAPI
 		        'Authorization' => 'Bearer '. $access_token
 		    ],
 		]);
+
+	    $this->log('END ended without exceptions');
 
 		return collect( json_decode( (string)$response->getBody(), true ) );
 	}
