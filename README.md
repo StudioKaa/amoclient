@@ -11,6 +11,8 @@ In your laravel project run: `composer require studiokaa/amoclient`
 Now set these keys in your .env file:
 * AMO_CLIENT_ID
 * AMO_CLIENT_SECRET
+* AMO_API_LOG
+	* Set to 'yes' to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
 * AMO_APP_FOR
 	* This key determines if students can login to your application. 
 	* May be one of:

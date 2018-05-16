@@ -9,10 +9,12 @@ class AmoAPI
 {
 
 	private $client;
+	private $logging;
 
 	public function __construct()
 	{
 		$this->client = new \GuzzleHttp\Client;
+		$this->logging = config('amoclient.api_log') == 'yes' ? true : false;
 	}
 
 	public function get($endpoint)
@@ -62,7 +64,7 @@ class AmoAPI
 			$access_token = (new Parser())->parse((string) $tokens->access_token);
 			session('access_token', $access_token);
 			session('refresh_token', $tokens->refresh_token);
-			
+
 			return $access_token;
 		}
 		catch(\GuzzleHttp\Exception\ClientException $e)
@@ -75,6 +77,9 @@ class AmoAPI
 
 	private function log($msg)
 	{
-		Log::debug("AMOCLIENT (" . Auth::user()->id . "): $msg");
+		if($this->logging)
+		{
+			Log::debug("AMOCLIENT (" . Auth::user()->id . "): $msg");
+		}
 	}
 }
