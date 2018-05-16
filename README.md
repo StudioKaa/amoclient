@@ -59,7 +59,9 @@ _Please note:_ a real logout cannot be accomplished at this time. If you log-out
 Don't use this in combination with Amoclient.
 
 ## AmoAPI
-Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented, but you may refer to _amologin_'s [routes/api.php](https://github.com/StudioKaa/amologin/blob/master/routes/api.php)-file.
+Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented, although there are options to explore the api:
+* Refer to _amologin_'s [routes/api.php](https://github.com/StudioKaa/amologin/blob/master/routes/api.php) file.
+* Play around at [apitest.amo.rocks](https://apitest.amo.rocks/).
 
 An example of calling the api through Amoclient;
 ```
