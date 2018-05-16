@@ -43,6 +43,8 @@ class AmoclientController extends Controller
 		        ]
 		    ]);
 
+		    dd($response);
+
 		    //Get id_token from the reponse
 		    $tokens = json_decode( (string) $response->getBody() );
 			$id_token = (new Parser())->parse((string) $tokens->id_token);
