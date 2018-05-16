@@ -18,27 +18,59 @@ Now alter your User model by adding the line: `public $incrementing = false;`
 
 Lastly, you should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
 
-## Logging in
+### Logging in
 Redirect your users to `http://yoursite/amoclient/redirect`, this will send your user to _amologin_ for authentication.
 
-## Catch the after-login redirect
+You should have a named route that will serve your users with a button or direct redirect to `/amoclient/redirect.`
+
+Example;
+```
+Route::get('/login', function(){
+	return redirect('/amoclient/redirect');
+})->name('login');
+
+```
+
+### Catch the after-login redirect
 After a succesfull login, Amoclient will redirect you to `/amoclient/ready`. You may define a route in your applications `routes/web.php` file to handle this.
 
-## Logging out
-Send your user to `/amoclient/logout`.
-
-## A login page
-You should have a named route that will serve your users with a button, link or image that will point to `/amoclient/redirect.`
-
-An example;
+Example;
 ```
 Route::get('/amoclient/ready', function(){
 	return redirect('/educations');
 })
-Route::get('/login', function(){
-	return view('login.login');
-})->name('login');
 ```
 
+### Logging out
+Send your user to `/amoclient/logout`.
+_Please note:_ a real logout cannot be accomplished at this time. If you log-out of your app, but are still logged-in to the _amologin_-server, this will have no effect.
+
+
 ## Laravel's `make:auth`
-You shouldn't use this, amoclient will handle everything for your.
+Don't use this in combination with Amoclient.
+
+## AmoAPI
+Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented.
+
+An example of calling the api through Amoclient;
+```
+
+namespace App\Http\Controllers;
+use \StudioKaa\Amoclient\Facades\AmoAPI;
+
+class MyController extends Controller
+{
+
+	public function index()
+	{
+		 $users = AmoAPI::get('users');
+		 return view('users.index')->with(compact('users'));
+	}
+
+}
+
+```
+
+### `AmoAPI::get($endpoint)`
+This will call `https://login.amo.rocks/api/$endpoint`.
+The method returns a Laravel-collection.
