@@ -16,7 +16,7 @@ class AmoclientController extends Controller
 
 	public function redirect()
 	{
-		$client_id = env('AMO_CLIENT_ID');
+		$client_id = config('amoclient.client_id');
 		if($client_id == null)
 		{
 			dd('Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file');
@@ -28,31 +28,27 @@ class AmoclientController extends Controller
 	public function callback(Request $request)
 	{
 
-		$client = $this->getAndCheckEnv();
-
 		$http = new \GuzzleHttp\Client;
 		try {
 
 			//Exchange authcode for tokens
 		    $response = $http->post('https://login.amo.rocks/oauth/token', [
 		        'form_params' => [
-		            'client_id' => $client->id,
-		            'client_secret' => $client->secret,
+		            'client_id' => config('amoclient.client_id'),
+		            'client_secret' => config('amoclient.client_secret'),
 		            'code' => $request->code,
 		            'grant_type' => 'authorization_code'
 		        ]
 		    ]);
-
-		    dd($response);
 
 		    //Get id_token from the reponse
 		    $tokens = json_decode( (string) $response->getBody() );
 			$id_token = (new Parser())->parse((string) $tokens->id_token);
 
 			//Verify id_token
-			if(!$id_token->verify(new Sha256(), $client->secret))
+			if(!$id_token->verify(new Sha256(), config('amoclient.client_secret')))
 			{
-				dd("Token cannot be verified.");
+				dd("The id_token cannot be verified.");
 			}
 
 			//Get 'user' claim
@@ -61,7 +57,7 @@ class AmoclientController extends Controller
 			$token_user = json_decode($token_user);
 
 			//Check if user may login
-			if(env('AMO_APP_FOR', 'teachers') == 'teachers' && $token_user->type != 'teacher')
+			if(config('amoclient.app_for') == 'teachers' && $token_user->type != 'teacher')
 			{
 				dd('Oops: this app is only availble to teacher-accounts');
 			}
@@ -91,19 +87,6 @@ class AmoclientController extends Controller
 	{
 		Auth::logout();
 		return redirect('/amoclient/ready');
-	}
-
-	private function getAndCheckEnv()
-	{
-		$client['id'] = env('AMO_CLIENT_ID');
-		$client['secret'] = env('AMO_CLIENT_SECRET');
-		
-		if($client['id'] == null || $client['secret'] == null)
-		{
-			dd('Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file');
-		}
-
-		return (object) $client;
 	}
 
 }

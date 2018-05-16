@@ -13,7 +13,7 @@ class AmoclientServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__.'/routes.php');
 
-        if(env('AMO_USE_MIGRATION', 'yes') == 'yes')
+        if(config('amoclient.use_migration') == 'yes')
         {
             $this->loadMigrationsFrom(__DIR__.'/migrations');
         }   
@@ -25,6 +25,10 @@ class AmoclientServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/config/amoclient.php', 'amoclient'
+        );
+
         $this->app->make('StudioKaa\Amoclient\AmoclientController');
     }
 }
