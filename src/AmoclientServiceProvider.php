@@ -29,7 +29,6 @@ class AmoclientServiceProvider extends ServiceProvider
             __DIR__.'/config/amoclient.php', 'amoclient'
         );
 
-        $this->app->make('StudioKaa\Amoclient\AmoclientController');
         $this->app->singleton('StudioKaa\AmoAPI', function () {
             return new AmoAPI();
         });
