@@ -12,7 +12,7 @@ Now set these keys in your .env file:
 * AMO_CLIENT_ID
 * AMO_CLIENT_SECRET
 * AMO_API_LOG
-	* Set to 'yes' to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
+	* Set to `true` to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
 * AMO_APP_FOR
 	* This key determines if students can login to your application. 
 	* May be one of:
@@ -21,7 +21,7 @@ Now set these keys in your .env file:
 
 Alter your User model by adding the line: `public $incrementing = false;`
 
-You should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+You should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=false`
 
 Lastly, run `php artisan migrate`.
 

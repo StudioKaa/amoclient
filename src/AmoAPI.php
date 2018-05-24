@@ -14,7 +14,7 @@ class AmoAPI
 	public function __construct()
 	{
 		$this->client = new \GuzzleHttp\Client;
-		$this->logging = config('amoclient.api_log') == 'yes' ? true : false;
+		$this->logging = config('amoclient.api_log');
 	}
 
 	public function get($endpoint)
