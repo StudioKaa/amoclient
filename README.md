@@ -41,7 +41,7 @@ Route::get('/login', function(){
 ```
 
 ### Catch the after-login redirect
-After a succesful login, Amoclient will redirect you to `/amoclient/ready`. You may define a route in your applications `routes/web.php` file to handle this.
+After a successful login, Amoclient will redirect you to `/amoclient/ready`. You may define a route in your applications `routes/web.php` file to handle this.
 
 Example;
 ```php
