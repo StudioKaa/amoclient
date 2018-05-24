@@ -6,14 +6,14 @@ A Laravel 5 package for use with the _amologin_ OpenID connect server.
 
 __!!__ Please make sure your app is using _https_, to prevent unwanted exposure of token, secrets, etc.
 
-In your laravel project run: `composer require studiokaa/amoclient`
+In your Laravel project run: `composer require studiokaa/amoclient`
 
 Now set these keys in your .env file:
-* AMO_CLIENT_ID
-* AMO_CLIENT_SECRET
-* AMO_API_LOG
-	* Set to 'yes' to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
-* AMO_APP_FOR
+* `AMO_CLIENT_ID`
+* `AMO_CLIENT_SECRET`
+* `AMO_API_LOG`
+	* Set to 'yes' to make Amoclient log all usage of `access_tokens` and `refresh_tokens` to the default log-channel.
+* `AMO_APP_FOR`
 	* This key determines if students can login to your application. 
 	* May be one of:
 		* _all_: everyone can login, you may restrict access using guards or middleware.
@@ -21,7 +21,7 @@ Now set these keys in your .env file:
 
 Alter your User model by adding the line: `public $incrementing = false;`
 
-You should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+You should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your `.env` file set: `AMO_USE_MIGRATION=no`
 
 Lastly, run `php artisan migrate`.
 
@@ -33,7 +33,7 @@ Redirect your users to `http://yoursite/amoclient/redirect`, this will send your
 You should have a named route that will serve your users with a button or direct redirect to `/amoclient/redirect.`
 
 Example;
-```
+```php
 Route::get('/login', function(){
 	return redirect('/amoclient/redirect');
 })->name('login');
@@ -41,10 +41,10 @@ Route::get('/login', function(){
 ```
 
 ### Catch the after-login redirect
-After a succesfull login, Amoclient will redirect you to `/amoclient/ready`. You may define a route in your applications `routes/web.php` file to handle this.
+After a succesful login, Amoclient will redirect you to `/amoclient/ready`. You may define a route in your applications `routes/web.php` file to handle this.
 
 Example;
-```
+```php
 Route::get('/amoclient/ready', function(){
 	return redirect('/educations');
 })
@@ -59,12 +59,12 @@ _Please note:_ a real logout cannot be accomplished at this time. If you log-out
 Don't use this in combination with Amoclient.
 
 ## AmoAPI
-Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented, although there are options to explore the api:
-* Refer to _amologin_'s [routes/api.php](https://github.com/StudioKaa/amologin/blob/master/routes/api.php) file.
+Apart from being the central login-server, _login.amo.rocks_ also exposes an API. Please note this API is currently undocumented, although there are options to explore the API:
+* Refer to _amologin_'s [`routes/api.php`](https://github.com/StudioKaa/amologin/blob/master/routes/api.php) file.
 * Play around at [apitest.amo.rocks](https://apitest.amo.rocks/).
 
-An example of calling the api through Amoclient;
-```
+An example of calling the API through Amoclient;
+```php
 namespace App\Http\Controllers;
 use \StudioKaa\Amoclient\Facades\AmoAPI;
 
