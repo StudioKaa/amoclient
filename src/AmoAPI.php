@@ -44,7 +44,7 @@ class AmoAPI
 			$this->log('Succesfully using current access_token');
 		}
 
-	    $response = $this->client->request($method, 'https://api.amo.rocks' . $endpoint, [
+	    $response = $this->client->request($method, 'https://api.curio.codes' . $endpoint, [
 		    'headers' => [
 		        'Accept' => 'application/json',
 		        'Authorization' => 'Bearer '. $access_token
@@ -60,7 +60,7 @@ class AmoAPI
 	{
 		try
 		{
-			$response = $this->client->post('https://login.amo.rocks/oauth/token', [
+			$response = $this->client->post('https://login.curio.codes/oauth/token', [
 			    'form_params' => [
 			        'grant_type' => 'refresh_token',
 			        'refresh_token' => $refresh_token,
