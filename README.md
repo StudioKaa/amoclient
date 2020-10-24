@@ -1,6 +1,7 @@
 # Amoclient
 
 A Laravel 5 (and up) package for use with the _amologin_ OpenID connect server.
+Now using curio.codes!
 
 ## Installation
 
