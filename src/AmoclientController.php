@@ -22,7 +22,7 @@ class AmoclientController extends Controller
 			dd('Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file');
 		}
 
-		return redirect('https://login.amo.rocks/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code');
+		return redirect('https://login.curio.codes/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code');
 	}
 
 	public function callback(Request $request)
@@ -32,7 +32,7 @@ class AmoclientController extends Controller
 		try {
 
 			//Exchange authcode for tokens
-		    $response = $http->post('https://login.amo.rocks/oauth/token', [
+		    $response = $http->post('https://login.curio.codes/oauth/token', [
 		        'form_params' => [
 		            'client_id' => config('amoclient.client_id'),
 		            'client_secret' => config('amoclient.client_secret'),
