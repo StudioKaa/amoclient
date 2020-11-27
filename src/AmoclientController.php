@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
-use App\User;
+use App\Models\User;
 
 class AmoclientController extends Controller
 {
