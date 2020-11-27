@@ -4,6 +4,7 @@ namespace StudioKaa\Amoclient;
 use Lcobucci\JWT\Parser;
 use Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AmoAPI
 {
