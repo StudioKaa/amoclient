@@ -30,7 +30,7 @@ class AmoAPI
 			abort(401, 'No access token: probably not logged-in');
 		}
 
-		$endpoint = str_start($endpoint, '/');
+		$endpoint = Str::start($endpoint, '/');
 
 		$this->log('START using access_token');
 
