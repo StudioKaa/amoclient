@@ -2,24 +2,43 @@
 
 namespace StudioKaa\Amoclient;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
 use App\Models\User;
+use App\Http\Controllers\Controller;
+
+use DateTimeZone;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\Clock\SystemClock;
+use Lcobucci\JWT\Validation\Constraint\ValidAt;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 
 class AmoclientController extends Controller
 {
+	private Configuration $config;
+
+	public function __construct()
+	{
+	    $this->config = Configuration::forSymmetricSigner(
+            new Sha256(),
+            InMemory::plainText('')
+        );
+
+        $this->config->setValidationConstraints(
+            new ValidAt(new SystemClock(new DateTimeZone(\date_default_timezone_get()))),
+            new SignedWith(new Sha256(), InMemory::plainText(config('amoclient.client_secret')))
+        );
+	}
 
 	public function redirect()
 	{
 		$client_id = config('amoclient.client_id');
 		if($client_id == null)
 		{
-			dd('Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file');
+            abort(500, 'Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file.');
 		}
 
 		return redirect('https://login.curio.codes/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code');
@@ -41,25 +60,29 @@ class AmoclientController extends Controller
 		        ]
 		    ]);
 
-		    //Get id_token from the reponse
-		    $tokens = json_decode( (string) $response->getBody() );
-			$id_token = (new Parser())->parse((string) $tokens->id_token);
+		    $tokens = json_decode((string) $response->getBody());
 
-			//Verify id_token
-			if(!$id_token->verify(new Sha256(), config('amoclient.client_secret')))
-			{
-				dd("The id_token cannot be verified.");
-			}
+            try {
+                $token = $this->config->parser()->parse($tokens->id_token);
+            } catch (\Lcobucci\JWT\Exception $exception) {
+                abort(400, 'Access token could not be parsed!');
+            }
 
-			//Get 'user' claim
-			$id_token->getClaims();
-			$token_user = $id_token->getClaim('user');
+            try {
+                $constraints = $this->config->validationConstraints();
+                $this->config->validator()->assert($token, ...$constraints);
+            } catch (RequiredConstraintsViolated $exception) {
+                abort(400, 'Access token could not be verified!');
+            }
+
+            $claims = $token->claims();
+			$token_user = $claims->get('user');
 			$token_user = json_decode($token_user);
 
 			//Check if user may login
 			if(config('amoclient.app_for') == 'teachers' && $token_user->type != 'teacher')
 			{
-				dd('Oops: this app is only availble to teacher-accounts');
+                abort(403, 'Oops: This app is only available to teacher-accounts!');
 			}
 
 			//Create new user if not exists
@@ -78,7 +101,7 @@ class AmoclientController extends Controller
 			Auth::login($user);
 
 			//Store access- and refresh-token in session
-			$access_token = (new Parser())->parse((string) $tokens->access_token);
+			$access_token = $this->config->parser()->parse((string) $tokens->access_token);
 			$request->session()->put('access_token', $access_token);
 			$request->session()->put('refresh_token', $tokens->refresh_token);
 
@@ -86,7 +109,7 @@ class AmoclientController extends Controller
 			return redirect('/amoclient/ready');
 
 		} catch (\GuzzleHttp\Exception\BadResponseException $e) {
-		    dd("Unable to retrieve access token: " . $e->getResponse()->getBody());
+            abort(500, 'Unable to retrieve access token: '. $e->getResponse()->getBody());
 		}
 	}
 
