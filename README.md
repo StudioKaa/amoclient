@@ -7,24 +7,28 @@ Now using curio.codes!
 
 __!!__ Please make sure your app is using _https_, to prevent unwanted exposure of token, secrets, etc.
 
-In your laravel project run: `composer require studiokaa/amoclient`
+To use amoclient in your project:
 
-Now set these keys in your .env file:
-* AMO_CLIENT_ID
-* AMO_CLIENT_SECRET
-* AMO_API_LOG
-	* Set to 'yes' to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
-* AMO_APP_FOR
-	* This key determines if students can login to your application. 
-	* May be one of:
-		* _all_: everyone can login, you may restrict access using guards or middleware.
-		* _teachers_: a student will be completely blocked and no user will be created when they try to login.
+1. In your laravel project run: `composer require studiokaa/amoclient`
+2. Set these keys in your .env file:
+	* AMO_CLIENT_ID
+	* AMO_CLIENT_SECRET
+	* AMO_API_LOG (optional)
+		* Default: no
+		* Set to 'yes' to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
+	* AMO_APP_FOR (optional)
+		* Default: teachers
+		* This key determines if students can login to your application. 
+		* May be one of:
+			* _all_: everyone can login, you may restrict access using guards or middleware.
+			* _teachers_: a student will be completely blocked and no user will be created when they try to login.
+	* AMO_USE_MIGRATION (optional)
+		* Default: yes
+		* Set to no if you want to use your own migration instead of the users migration this package provides
+3. Alter your User model and add the line: `public $incrementing = false;`
+4. (Recommended) Remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+5. Lastly, run `php artisan migrate`.
 
-Alter your User model by adding the line: `public $incrementing = false;`
-
-You should remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
-
-Lastly, run `php artisan migrate`.
 
 ## Usage
 
@@ -58,6 +62,7 @@ _Please note:_ a real logout cannot be accomplished at this time. If you log-out
 
 ### Laravel's `make:auth`
 Don't use this in combination with Amoclient.
+
 
 ## AmoAPI
 Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented, although there are options to explore the api:
