@@ -65,9 +65,12 @@ Don't use this in combination with Amoclient.
 
 
 ## AmoAPI
+
 Apart from being the central login-server, _login.amo.rocks_ also exposes an api. Please note this api is currently undocumented, although there are options to explore the api:
 * Refer to _amologin_'s [routes/api.php](https://github.com/StudioKaa/amologin/blob/master/routes/api.php) file.
 * Play around at [apitest.amo.rocks](https://apitest.amo.rocks/).
+
+### Amoclient API Interface
 
 An example of calling the api through Amoclient;
 ```
@@ -85,6 +88,8 @@ class MyController extends Controller
 }
 
 ```
+
+**Known 'bug':** Currently the AmoAPI class doesn't check if the token expired but just refreshes it anytime you use it.
 
 ### `AmoAPI::get($endpoint)`
 * Performs an HTTP-request like `GET https://api.amo.rocks/$endpoint`.

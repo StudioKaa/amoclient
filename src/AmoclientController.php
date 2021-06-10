@@ -5,34 +5,12 @@ namespace StudioKaa\Amoclient;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 
-use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\Clock\SystemClock;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
-use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 
 class AmoclientController extends Controller
 {
-	private Configuration $config;
-
-	public function __construct()
-	{
-	    $this->config = Configuration::forSymmetricSigner(
-            new Sha256(),
-            InMemory::plainText('')
-        );
-
-        $this->config->setValidationConstraints(
-            new ValidAt(new SystemClock(new DateTimeZone(\date_default_timezone_get()))),
-            new SignedWith(new Sha256(), InMemory::plainText(config('amoclient.client_secret')))
-        );
-	}
-
 	public function redirect()
 	{
 		$client_id = config('amoclient.client_id');
@@ -60,17 +38,18 @@ class AmoclientController extends Controller
 		        ]
 		    ]);
 
+			$config = AmoclientHelper::getTokenConfig();
 		    $tokens = json_decode((string) $response->getBody());
 
             try {
-                $token = $this->config->parser()->parse($tokens->id_token);
+                $token = $config->parser()->parse($tokens->id_token);
             } catch (\Lcobucci\JWT\Exception $exception) {
                 abort(400, 'Access token could not be parsed!');
             }
 
             try {
-                $constraints = $this->config->validationConstraints();
-                $this->config->validator()->assert($token, ...$constraints);
+                $constraints = $config->validationConstraints();
+                $config->validator()->assert($token, ...$constraints);
             } catch (RequiredConstraintsViolated $exception) {
                 abort(400, 'Access token could not be verified!');
             }
@@ -97,17 +76,13 @@ class AmoclientController extends Controller
 				$user->save();
 			}
 
-			//Login
 			Auth::login($user);
 
 			//Store access- and refresh-token in session
-			$access_token = $this->config->parser()->parse((string) $tokens->access_token);
-			$request->session()->put('access_token', $access_token);
+			$request->session()->put('access_token', $tokens->access_token);
 			$request->session()->put('refresh_token', $tokens->refresh_token);
 
-			//Redirect
 			return redirect('/amoclient/ready');
-
 		} catch (\GuzzleHttp\Exception\BadResponseException $e) {
             abort(500, 'Unable to retrieve access token: '. $e->getResponse()->getBody());
 		}

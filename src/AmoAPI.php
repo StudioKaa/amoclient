@@ -1,7 +1,7 @@
 <?php
 
 namespace StudioKaa\Amoclient;
-use Lcobucci\JWT\Parser;
+
 use Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -26,6 +26,7 @@ class AmoAPI
 	private function call($endpoint = 'user', $method = 'GET')
 	{
 		$access_token = session('access_token');
+		
 		if($access_token == null)
 		{
 			abort(401, 'No access token: probably not logged-in');
@@ -35,15 +36,16 @@ class AmoAPI
 
 		$this->log('START using access_token');
 
-		if($access_token->isExpired())
+		// TODO: Don't needlesly refresh the token
+		//if($access_token->isExpired())
 		{
 			$this->log('access_token expired, trying to refresh');
 			$access_token = $this->refresh(session('refresh_token'));
 		}
-		else
-		{
-			$this->log('Succesfully using current access_token');
-		}
+		// else
+		// {
+		// 	$this->log('Succesfully using current access_token');
+		// }
 
 	    $response = $this->client->request($method, 'https://api.curio.codes' . $endpoint, [
 		    'headers' => [
@@ -59,6 +61,8 @@ class AmoAPI
 
 	private function refresh($refresh_token)
 	{
+		$config = AmoclientHelper::getTokenConfig();
+
 		try
 		{
 			$response = $this->client->post('https://login.curio.codes/oauth/token', [
@@ -73,8 +77,8 @@ class AmoAPI
 			$this->log('new access_token acquired');
 
 			$tokens = json_decode( (string) $response->getBody() );
-			$access_token = (new Parser())->parse((string) $tokens->access_token);
-			session()->put('access_token', $access_token);
+			$access_token = $config->parser()->parse((string) $tokens->access_token)->toString();
+			session()->put('access_token', $tokens->access_token);
 			session()->put('refresh_token', $tokens->refresh_token);
 
 			return $access_token;
