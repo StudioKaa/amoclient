@@ -90,3 +90,23 @@ class MyController extends Controller
 * Performs an HTTP-request like `GET https://api.amo.rocks/$endpoint`.
 * This method relies on a user being authenticated through the amoclient first. Please do call this method only from routes and/or controllers protected by the _auth_ middlware.
 * Returns a Laravel-collection
+
+
+## Contributing
+
+1. Clone this repository to your device
+2. Inside the root of this repository run `composer install`
+3. Create a test project in which you will use this package (Follow [Usage](#usage) instructions above)
+4. Add the package locally using the following additions to your composer.json:
+	```json
+		"repositories": [
+			{
+				"type": "path",
+				"url": "../amoclient"
+			}
+		],
+	```
+	* **Note:** `../amoclient` should point to where you cloned this package
+5. Run `composer require "vendorname/packagename @dev"` inside the test project
+
+You can now test and modify this package. Changes will immediately be reflected in the test project.
