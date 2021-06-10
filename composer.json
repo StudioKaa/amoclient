@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "lcobucci/jwt": "3.3.3",
+        "lcobucci/jwt": "^4.0",
         "guzzlehttp/guzzle": "^7.0"
     },
     "autoload": {

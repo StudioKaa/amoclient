@@ -16,7 +16,7 @@ class AmoclientServiceProvider extends ServiceProvider
         if(config('amoclient.use_migration') == 'yes')
         {
             $this->loadMigrationsFrom(__DIR__.'/migrations');
-        }   
+        }
     }
     /**
      * Register the application services.
@@ -33,5 +33,5 @@ class AmoclientServiceProvider extends ServiceProvider
         $this->app->singleton('StudioKaa\AmoAPI', function () {
             return new AmoAPI();
         });
-    }   
+    }
 }
