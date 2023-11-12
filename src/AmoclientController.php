@@ -44,14 +44,14 @@ class AmoclientController extends Controller
             try {
                 $token = $config->parser()->parse($tokens->id_token);
             } catch (\Lcobucci\JWT\Exception $exception) {
-                abort(400, 'Access token could not be parsed!');
+                abort(400, $exception->getMessage());
             }
 
             try {
                 $constraints = $config->validationConstraints();
                 $config->validator()->assert($token, ...$constraints);
             } catch (RequiredConstraintsViolated $exception) {
-                abort(400, 'Access token could not be verified!');
+                abort(400, $exception->getMessage());
             }
 
             $claims = $token->claims();

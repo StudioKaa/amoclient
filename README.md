@@ -112,6 +112,6 @@ class MyController extends Controller
 		],
 	```
 	* **Note:** `../amoclient` should point to where you cloned this package
-5. Run `composer require "vendorname/packagename @dev"` inside the test project
+5. Run `composer require "studiokaa/amoclient @dev"` inside the test project
 
 You can now test and modify this package. Changes will immediately be reflected in the test project.
