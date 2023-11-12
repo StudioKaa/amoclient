@@ -11,7 +11,7 @@ use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 
 class AmoclientController extends Controller
 {
-	public function redirect()
+	public function redirectUrl()
 	{
 		$client_id = config('amoclient.client_id');
 		if($client_id == null)
@@ -19,7 +19,14 @@ class AmoclientController extends Controller
             abort(500, 'Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file.');
 		}
 
-		return redirect('https://login.curio.codes/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code');
+		return 'https://login.curio.codes/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code';
+	}
+
+	public function redirect()
+	{
+		$url = $this->redirectUrl();
+
+		return redirect($url);
 	}
 
 	public function callback(Request $request)

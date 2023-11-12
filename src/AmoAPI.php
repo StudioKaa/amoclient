@@ -89,11 +89,18 @@ class AmoAPI
 
 			return $access_token;
 		}
-		catch(\GuzzleHttp\Exception\ClientException $e)
+        catch(\GuzzleHttp\Exception\ClientException $e)
 		{
 			$this->log('refreshing token failed, redirecting for authorization');
-			$url = app('StudioKaa\Amoclient\AmoclientController')->redirect()->getTargetUrl();
-			abort(302, '', ["Location" => $url]);
+            $controller = app('StudioKaa\Amoclient\AmoclientController');
+			$redirector = $controller->redirect();
+
+            // Workaround for Livewire. TODO: Find a better way to do this.
+            if (get_class($redirector) === 'Livewire\Features\SupportRedirects\Redirector') {
+                $redirector = $redirector->response($controller->redirectUrl());
+            }
+
+            abort(302, '', ["Location" => $redirector->getTargetUrl()]);
 		}
 	}
 
