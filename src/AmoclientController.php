@@ -24,10 +24,15 @@ class AmoclientController extends Controller
 
 	public function callback(Request $request)
 	{
+        $config = [];
 
-		$http = new \GuzzleHttp\Client;
+        if (config('amoclient.ssl_verify_peer') === 'no') {
+            $config = ['curl' => [CURLOPT_SSL_VERIFYPEER => false]];
+        }
+
+		$http = new \GuzzleHttp\Client($config);
+
 		try {
-
 			//Exchange authcode for tokens
 		    $response = $http->post('https://login.curio.codes/oauth/token', [
 		        'form_params' => [

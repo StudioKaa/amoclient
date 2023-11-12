@@ -14,7 +14,13 @@ class AmoAPI
 
 	public function __construct()
 	{
-		$this->client = new \GuzzleHttp\Client;
+        $config = [];
+
+        if (config('amoclient.ssl_verify_peer') === 'no') {
+            $config = ['curl' => [CURLOPT_SSL_VERIFYPEER => false]];
+        }
+
+		$this->client = new \GuzzleHttp\Client($config);
 		$this->logging = config('amoclient.api_log') == 'yes' ? true : false;
 	}
 
@@ -26,7 +32,7 @@ class AmoAPI
 	private function call($endpoint = 'user', $method = 'GET')
 	{
 		$access_token = session('access_token');
-		
+
 		if($access_token == null)
 		{
 			abort(401, 'No access token: probably not logged-in');
