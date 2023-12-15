@@ -11,7 +11,7 @@ use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 
 class AmoclientController extends Controller
 {
-	public function redirect()
+	public function redirectUrl()
 	{
 		$client_id = config('amoclient.client_id');
 		if($client_id == null)
@@ -19,15 +19,27 @@ class AmoclientController extends Controller
             abort(500, 'Please set AMO_CLIENT_ID and AMO_CLIENT_SECRET in .env file.');
 		}
 
-		return redirect('https://login.curio.codes/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code');
+		return 'https://login.curio.codes/oauth/authorize?client_id=' . $client_id . '&redirect_id=' . url('amoclient/callback') . '&response_type=code';
+	}
+
+	public function redirect()
+	{
+		$url = $this->redirectUrl();
+
+		return redirect($url);
 	}
 
 	public function callback(Request $request)
 	{
+        $config = [];
 
-		$http = new \GuzzleHttp\Client;
+        if (config('amoclient.ssl_verify_peer') === 'no') {
+            $config = ['curl' => [CURLOPT_SSL_VERIFYPEER => false]];
+        }
+
+		$http = new \GuzzleHttp\Client($config);
+
 		try {
-
 			//Exchange authcode for tokens
 		    $response = $http->post('https://login.curio.codes/oauth/token', [
 		        'form_params' => [
@@ -44,14 +56,14 @@ class AmoclientController extends Controller
             try {
                 $token = $config->parser()->parse($tokens->id_token);
             } catch (\Lcobucci\JWT\Exception $exception) {
-                abort(400, 'Access token could not be parsed!');
+                abort(400, $exception->getMessage());
             }
 
             try {
                 $constraints = $config->validationConstraints();
                 $config->validator()->assert($token, ...$constraints);
             } catch (RequiredConstraintsViolated $exception) {
-                abort(400, 'Access token could not be verified!');
+                abort(400, $exception->getMessage());
             }
 
             $claims = $token->claims();

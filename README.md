@@ -10,23 +10,31 @@ __!!__ Please make sure your app is using _https_, to prevent unwanted exposure 
 To use amoclient in your project:
 
 1. In your laravel project run: `composer require studiokaa/amoclient`
+
 2. Set these keys in your .env file:
-	* AMO_CLIENT_ID
-	* AMO_CLIENT_SECRET
-	* AMO_API_LOG (optional)
-		* Default: no
-		* Set to 'yes' to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
-	* AMO_APP_FOR (optional)
-		* Default: teachers
+
+	* `AMO_CLIENT_ID`
+	* `AMO_CLIENT_SECRET`
+	* `AMO_API_LOG` *(optional)*
+		* *Default:* `no`
+		* Set to `yes` to make Amoclient log all usage of access_tokens and refresh_tokens to the default log-channel.
+	* `AMO_APP_FOR` *(optional)*
+		* *Default:* `teachers`
 		* This key determines if students can login to your application. 
 		* May be one of:
-			* _all_: everyone can login, you may restrict access using guards or middleware.
-			* _teachers_: a student will be completely blocked and no user will be created when they try to login.
-	* AMO_USE_MIGRATION (optional)
-		* Default: yes
+			* `all`: everyone can login, you may restrict access using guards or middleware.
+			* `teachers`: a student will be completely blocked and no user will be created when they try to login.
+	* `AMO_USE_MIGRATION` *(optional)*
+		* *Default:* `yes`
 		* Set to no if you want to use your own migration instead of the users migration this package provides
+    * `AMO_SSL_VERIFYPEER` *(optional)*
+        * *Default:* `yes`
+        * Set to `no` if you want to disable SSL verification. This is only recommended for during development and only on trusted networks.
+
 3. Alter your User model and add the line: `public $incrementing = false;`
-4. (Recommended) Remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+
+4. *(Recommended)* Remove any default users-migration from your app, because Amoclient will conflict with it. Do _not_ remove the user-model. If you want to keep using your own migration, in your .env file set: `AMO_USE_MIGRATION=no`
+
 5. Lastly, run `php artisan migrate`.
 
 
@@ -112,6 +120,6 @@ class MyController extends Controller
 		],
 	```
 	* **Note:** `../amoclient` should point to where you cloned this package
-5. Run `composer require "vendorname/packagename @dev"` inside the test project
+5. Run `composer require "studiokaa/amoclient @dev"` inside the test project
 
 You can now test and modify this package. Changes will immediately be reflected in the test project.

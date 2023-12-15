@@ -31,10 +31,17 @@ class AmoclientHelper{
         );
 
         self::$cachedConfig->setValidationConstraints(
-            new ValidAt(new SystemClock(new DateTimeZone(\date_default_timezone_get()))),
+            new ValidAt(
+                new SystemClock(
+                    new DateTimeZone(\date_default_timezone_get()),
+                ),
+                // Fixes occasional "The token was issued in the future" when we're slow (e.g: when debugging with dd)
+                // Gives us a 1 minute leeway
+                new \DateInterval('PT1M')
+            ),
             new SignedWith(new Sha256(), InMemory::plainText($client_id))
         );
-        
+
         return self::$cachedConfig;
     }
 }
